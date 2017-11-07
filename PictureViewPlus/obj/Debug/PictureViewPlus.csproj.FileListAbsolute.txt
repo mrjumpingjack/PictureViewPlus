@@ -31,7 +31,7 @@ F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\De
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Debug\XmpCore.dll
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Debug\MetadataExtractor.xml
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Debug\XmpCore.xml
-F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.csprojResolveAssemblyReference.cache
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.Form1.resources
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.Properties.Resources.resources
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.csproj.GenerateResource.Cache
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.MetadataView.resources

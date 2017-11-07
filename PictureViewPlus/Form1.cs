@@ -26,45 +26,52 @@ namespace PictureViewPlus
         string accfile;
         string lastfile;
         string nextfile;
-
-
         float aspectratio;
-
+        List<string> std_open_with_programm = new List<string>();
+        bool showinghelp = false;
+        bool showinginfo = false;
+        List<string> file_infos = new List<string>();
 
         private void load_pictureBox(string openFile)
         {
-            if (openFile.EndsWith("CR2"))
+            try
             {
-                img =convertCR2toJPG(openFile);
+                if (openFile.EndsWith("CR2"))
+                {
+                    img = convertCR2toJPG(openFile);
 
+                }
+                else
+                {
+
+                    img = (Bitmap)Image.FromFile(openFile);
+
+                }
+                // pictureBox1.Load(openFile);
+                picbox.Image = img;
+                pictureBox1.Image = img;
+
+
+
+
+                if (img.Height < img.Width)
+                {
+                    aspectratio = (float)img.Height / (float)img.Width;
+                    this.Width = 1024;
+                    this.Height = (int)Math.Round(this.Width * aspectratio);
+                }
+                else
+                {
+                    aspectratio = (float)img.Width / (float)img.Height;
+                    this.Height = 1024;
+                    this.Width = (int)Math.Round(this.Height * aspectratio);
+                }
             }
-            else
+            catch (Exception ex)
             {
 
-                img = (Bitmap)Image.FromFile(openFile);
-
-            }
-            // pictureBox1.Load(openFile);
-            picbox.Image = img;
-            pictureBox1.Image = img;
-
-
-
-
-            if (img.Height < img.Width)
-            {
-                aspectratio = (float)img.Height / (float)img.Width;
-                this.Width = 1024;
-                this.Height = (int)Math.Round(this.Width * aspectratio);
-            }
-            else
-            {
-                aspectratio = (float)img.Width / (float)img.Height;
-                this.Height = 1024;
-                this.Width = (int)Math.Round(this.Height * aspectratio);
             }
         }
-
 
         private Bitmap convertCR2toJPG(string openFile)
         {
@@ -106,7 +113,7 @@ namespace PictureViewPlus
 
 
 
-               Bitmap bitmap = new Bitmap(new PartialStream(fi, jpgStartPosition, fileSize));
+                Bitmap bitmap = new Bitmap(new PartialStream(fi, jpgStartPosition, fileSize));
 
                 if (orientation == 6)
                     bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
@@ -128,7 +135,7 @@ namespace PictureViewPlus
             return null;
         }
 
-       static ImageCodecInfo m_codecJpeg = GetJpegCodec();
+        static ImageCodecInfo m_codecJpeg = GetJpegCodec();
 
         private static ImageCodecInfo GetJpegCodec()
         {
@@ -144,16 +151,8 @@ namespace PictureViewPlus
             return null;
         }
 
-
-
         public Form1(string openFile)
         {
-            //try
-            //{
-
-
-
-
 
             accfile = openFile;
             InitializeComponent();
@@ -166,54 +165,43 @@ namespace PictureViewPlus
 
             this.pictureBox1.MouseWheel += pictureBox1_MouseWheel;
 
-
-
             if (openFile != "")
             {
                 load_pictureBox(openFile);
-                getmetadata(openFile);
+
             }
             else
             {
-
-                Bitmap img = new Bitmap(typeof(Form1), "start.jpg");
-
-
-                if (img.Height < img.Width)
-                {
-                    aspectratio = (float)img.Height / (float)img.Width;
-                    this.Width = 1024;
-                    this.Height = (int)Math.Round(this.Width * aspectratio);
-                }
-                else
-                {
-                    aspectratio = (float)img.Width / (float)img.Height;
-                    this.Height = 1024;
-                    this.Width = (int)Math.Round(this.Height * aspectratio);
-                }
+                load_pictureBox("start.jpg");
 
 
-                picbox.Image = img;
-                pictureBox1.Image = img;
+
+                //Bitmap img = new Bitmap(typeof(Form1), "start.jpg");
+
+
+                //if (img.Height < img.Width)
+                //{
+                //    aspectratio = (float)img.Height / (float)img.Width;
+                //    this.Width = 1024;
+                //    this.Height = (int)Math.Round(this.Width * aspectratio);
+                //}
+                //else
+                //{
+                //    aspectratio = (float)img.Width / (float)img.Height;
+                //    this.Height = 1024;
+                //    this.Width = (int)Math.Round(this.Height * aspectratio);
+                //}
+
+
+                //picbox.Image = img;
+                //pictureBox1.Image = img;
             }
-
-
-
-
-
-
 
 
             this.Focus();
             get_programm();
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
         }
-
 
         private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -228,17 +216,22 @@ namespace PictureViewPlus
 
         }
 
-
+        MetadataView mdv;
 
 
         private void getmetadata(string path)
         {
+            mdv = new MetadataView();
+
             List<string> ImageInfo = new List<string>();
 
-            String[] infos = new string[] { "Date/Time", "Model", "Exposure Time", "F-Number", "Shutter Speed", "Focal Length" };
+            String[] infos = new string[] { "Date/Time", "Model", "Exposure Time", "F-Number", "Shutter Speed", "Focal Length", "File Name" };
 
             label1.Text = "";
             IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
+
+            mdv.Dirs = directories;
+
             foreach (var directory in directories)
             {
                 foreach (var tag in directory.Tags)
@@ -251,15 +244,12 @@ namespace PictureViewPlus
 
                         }
                     }
-
-
-
-                    Console.WriteLine($"{directory.Name} - {tag.Name} = {tag.Description}");
+                   // Console.WriteLine($"{directory.Name} - {tag.Name} = {tag.Description}");
                 }
             }
 
-            if(ImageInfo.Count>0)
-            ImageInfo.RemoveAt(ImageInfo.Count - 1);
+            //if (ImageInfo.Count > 0)
+            //    ImageInfo.RemoveAt(ImageInfo.Count - 1);
 
 
             foreach (string i in ImageInfo)
@@ -268,7 +258,6 @@ namespace PictureViewPlus
             }
 
         }
-
 
         public void next()
         {
@@ -320,7 +309,6 @@ namespace PictureViewPlus
             }
         }
 
-
         public void previous()
         {
             try
@@ -330,7 +318,7 @@ namespace PictureViewPlus
                 {
                     accfile = file_infos[file_infos.IndexOf(accfile) - 1];
                     img.Dispose();
-                   
+
 
 
                     if (accfile.ToLower().EndsWith(".cr2"))
@@ -349,7 +337,7 @@ namespace PictureViewPlus
                 {
                     accfile = file_infos[file_infos.Count - 1];
                     img.Dispose();
-             
+
 
 
                     if (accfile.ToLower().EndsWith(".cr2"))
@@ -374,8 +362,6 @@ namespace PictureViewPlus
             }
 
         }
-
-        List<string> std_open_with_programm = new List<string>();
 
         public void get_programm()
         {
@@ -405,12 +391,6 @@ namespace PictureViewPlus
             std_open_with_programm.Sort();
 
         }
-
-
-
-        bool showinghelp = false;
-        bool showinginfo = false;
-
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -528,10 +508,6 @@ namespace PictureViewPlus
             }
         }
 
-
-        List<string> file_infos = new List<string>();
-
-
         private void Form1_Shown(object sender, EventArgs e)
         {
             this.Controls.Remove(panel1);
@@ -592,7 +568,6 @@ namespace PictureViewPlus
                 this.WindowState = FormWindowState.Normal;
             }
         }
-        
 
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -603,6 +578,12 @@ namespace PictureViewPlus
                 this.MaximizeBox = false;
                 this.MinimizeBox = false;
                 this.TopMost = false;
+
+
+                Form1.ActiveForm.Text = null;
+
+
+
             }
             else
             {
@@ -611,7 +592,7 @@ namespace PictureViewPlus
                 this.MinimizeBox = true;
                 this.TopMost = false;
 
-
+                Form1.ActiveForm.Text = accfile;
 
 
 
@@ -625,7 +606,6 @@ namespace PictureViewPlus
             panel1.Size = new Size(this.Width, panel1.Height);
 
         }
-
 
         private void pictureBox1_MouseDoubleClick_1(object sender, MouseEventArgs e)
         {
@@ -675,7 +655,6 @@ namespace PictureViewPlus
             }
         }
 
-
         private void öffnenInToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             int i = this.öffnenInToolStripMenuItem.DropDownItems.IndexOf(e.ClickedItem);
@@ -718,6 +697,7 @@ namespace PictureViewPlus
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
+            UseWaitCursor = true;
             int x = this.PointToClient(new Point(e.X, e.Y)).X;
 
             int y = this.PointToClient(new Point(e.X, e.Y)).Y;
@@ -728,37 +708,78 @@ namespace PictureViewPlus
 
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                pictureBox1.Image = Image.FromFile(files[0]);
+                load_pictureBox(files[0]);
+
+                accfile = files[0];
+                this.Text =accfile;
+                getmetadata(accfile);
 
             }
+            UseWaitCursor = false;
         }
 
         private void rotateLeftToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Image img = pictureBox1.Image;
-            img.RotateFlip(RotateFlipType.Rotate270FlipNone);
-            pictureBox1.Image = img;
+            try
+            {
+                Image img = pictureBox1.Image;
+                img.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                pictureBox1.Image = img;
+                pictureBox1.Image = img;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void rotateRightToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Image img = pictureBox1.Image;
-            img.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            pictureBox1.Image = img;
+            try
+            {
+                Image img = pictureBox1.Image;
+                img.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                pictureBox1.Image = img;
+                pictureBox1.Image = img;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void flipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Image img = pictureBox1.Image;
-            img.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            pictureBox1.Image = img;
+            try
+            {
+                Image img = pictureBox1.Image;
+                img.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                pictureBox1.Image = img;
+                pictureBox1.Image = img;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void mirrorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Image img = pictureBox1.Image;
-            img.RotateFlip(RotateFlipType.RotateNoneFlipX);
-            pictureBox1.Image = img;
+            try
+            {
+                Image img = pictureBox1.Image;
+                img.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                pictureBox1.Image = img;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void showAllMetaDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mdv.ShowDialog();
         }
     }
     public static class FileAssoc
@@ -807,7 +828,6 @@ namespace PictureViewPlus
             return pOut.ToString();
         }
     }
-
 
     class PartialStream : Stream  // Fun solution and experiment... probably not the best idea here
     {

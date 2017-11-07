@@ -43,6 +43,7 @@
             this.picbox = new DDPanBox.DDPanBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.showAllMetaDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -70,7 +71,7 @@
             this.copyToClipboardToolStripMenuItem,
             this.imageToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 114);
             // 
             // öffnenInToolStripMenuItem
             // 
@@ -107,7 +108,8 @@
             this.rotateLeftToolStripMenuItem,
             this.rotateRightToolStripMenuItem,
             this.flipToolStripMenuItem,
-            this.mirrorToolStripMenuItem});
+            this.mirrorToolStripMenuItem,
+            this.showAllMetaDataToolStripMenuItem});
             this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.imageToolStripMenuItem.Text = "Image";
@@ -115,28 +117,28 @@
             // rotateLeftToolStripMenuItem
             // 
             this.rotateLeftToolStripMenuItem.Name = "rotateLeftToolStripMenuItem";
-            this.rotateLeftToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.rotateLeftToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.rotateLeftToolStripMenuItem.Text = "Rotate left";
             this.rotateLeftToolStripMenuItem.Click += new System.EventHandler(this.rotateLeftToolStripMenuItem_Click);
             // 
             // rotateRightToolStripMenuItem
             // 
             this.rotateRightToolStripMenuItem.Name = "rotateRightToolStripMenuItem";
-            this.rotateRightToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.rotateRightToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.rotateRightToolStripMenuItem.Text = "Rotate Right";
             this.rotateRightToolStripMenuItem.Click += new System.EventHandler(this.rotateRightToolStripMenuItem_Click);
             // 
             // flipToolStripMenuItem
             // 
             this.flipToolStripMenuItem.Name = "flipToolStripMenuItem";
-            this.flipToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.flipToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.flipToolStripMenuItem.Text = "Flip";
             this.flipToolStripMenuItem.Click += new System.EventHandler(this.flipToolStripMenuItem_Click);
             // 
             // mirrorToolStripMenuItem
             // 
             this.mirrorToolStripMenuItem.Name = "mirrorToolStripMenuItem";
-            this.mirrorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.mirrorToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.mirrorToolStripMenuItem.Text = "Mirror";
             this.mirrorToolStripMenuItem.Click += new System.EventHandler(this.mirrorToolStripMenuItem_Click);
             // 
@@ -168,6 +170,13 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 0;
+            // 
+            // showAllMetaDataToolStripMenuItem
+            // 
+            this.showAllMetaDataToolStripMenuItem.Name = "showAllMetaDataToolStripMenuItem";
+            this.showAllMetaDataToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.showAllMetaDataToolStripMenuItem.Text = "Show all meta data";
+            this.showAllMetaDataToolStripMenuItem.Click += new System.EventHandler(this.showAllMetaDataToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -217,6 +226,7 @@
         private System.Windows.Forms.ToolStripMenuItem rotateRightToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem flipToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mirrorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAllMetaDataToolStripMenuItem;
     }
 }
 

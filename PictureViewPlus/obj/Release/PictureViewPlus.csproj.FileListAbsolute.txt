@@ -1,0 +1,14 @@
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\PictureViewPlus.exe.config
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\start.jpg
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\PictureViewPlus.exe
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\PictureViewPlus.pdb
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\MetadataExtractor.dll
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\XmpCore.dll
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\MetadataExtractor.xml
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\bin\Release\XmpCore.xml
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.Form1.resources
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.MetadataView.resources
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.Properties.Resources.resources
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.csproj.GenerateResource.Cache
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.exe
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.pdb

@@ -66,6 +66,7 @@ namespace PictureViewPlus
                     this.Height = 1024;
                     this.Width = (int)Math.Round(this.Height * aspectratio);
                 }
+
             }
             catch (Exception ex)
             {
@@ -153,10 +154,9 @@ namespace PictureViewPlus
 
         public Form1(string openFile)
         {
-
-            accfile = openFile;
             InitializeComponent();
-
+            
+           
             picbox.BackColor = Color.Black;
             pictureBox1.BackColor = Color.Black;
 
@@ -165,39 +165,22 @@ namespace PictureViewPlus
 
             this.pictureBox1.MouseWheel += pictureBox1_MouseWheel;
 
+
+            accfile = openFile;
+
             if (openFile != "")
             {
                 load_pictureBox(openFile);
+                getmetadata(openFile);
 
             }
             else
             {
                 load_pictureBox("start.jpg");
-
-
-
-                //Bitmap img = new Bitmap(typeof(Form1), "start.jpg");
-
-
-                //if (img.Height < img.Width)
-                //{
-                //    aspectratio = (float)img.Height / (float)img.Width;
-                //    this.Width = 1024;
-                //    this.Height = (int)Math.Round(this.Width * aspectratio);
-                //}
-                //else
-                //{
-                //    aspectratio = (float)img.Width / (float)img.Height;
-                //    this.Height = 1024;
-                //    this.Width = (int)Math.Round(this.Height * aspectratio);
-                //}
-
-
-                //picbox.Image = img;
-                //pictureBox1.Image = img;
+                getmetadata("start.jpg");
             }
 
-
+            
             this.Focus();
             get_programm();
 
@@ -216,7 +199,7 @@ namespace PictureViewPlus
 
         }
 
-        MetadataView mdv;
+        MetadataView mdv = new MetadataView();
 
 
         private void getmetadata(string path)
@@ -301,7 +284,9 @@ namespace PictureViewPlus
                 }
 
                 getmetadata(accfile);
+                get_programm();
                 UseWaitCursor = false;
+
             }
             catch (Exception ex)
             {
@@ -354,6 +339,7 @@ namespace PictureViewPlus
 
                 }
                 getmetadata(accfile);
+                get_programm();
                 UseWaitCursor = false;
             }
             catch (Exception ex)
@@ -779,7 +765,14 @@ namespace PictureViewPlus
 
         private void showAllMetaDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mdv.ShowDialog();
+            try
+            {
+                mdv.ShowDialog();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
     public static class FileAssoc

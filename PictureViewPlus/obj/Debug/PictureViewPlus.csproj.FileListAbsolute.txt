@@ -35,3 +35,4 @@ F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\De
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.Properties.Resources.resources
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.csproj.GenerateResource.Cache
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.MetadataView.resources
+F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Debug\PictureViewPlus.csprojResolveAssemblyReference.cache

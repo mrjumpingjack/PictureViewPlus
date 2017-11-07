@@ -22,6 +22,7 @@ namespace PictureViewPlus
         public IEnumerable<MetadataExtractor.Directory> Dirs
         {
             set { dirs = value; }
+
             get { return dirs; }
         }
 
@@ -29,19 +30,26 @@ namespace PictureViewPlus
 
         private void MetadataView_Load(object sender, EventArgs e)
         {
-            foreach (var directory in dirs)
+            try
             {
-                foreach (var tag in directory.Tags)
+                foreach (var directory in dirs)
                 {
-                    DataGridViewRow row = (DataGridViewRow)dgv1.Rows[0].Clone();
-                    row.Cells[0].Value = tag;
-                    row.Cells[1].Value = tag.Description;
-                    dgv1.Rows.Add(row);
+                    foreach (var tag in directory.Tags)
+                    {
+                        DataGridViewRow row = (DataGridViewRow)dgv1.Rows[0].Clone();
+                        row.Cells[0].Value = tag;
+                        row.Cells[1].Value = tag.Description;
+                        dgv1.Rows.Add(row);
+                    }
                 }
-            }
 
-            dgv1.Columns[0].Width = dgv1.Width / 2;
-            dgv1.Columns[1].Width = dgv1.Width / 2;
+                dgv1.Columns[0].Width = dgv1.Width / 2;
+                dgv1.Columns[1].Width = dgv1.Width / 2;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void MetadataView_Resize(object sender, EventArgs e)

@@ -1,6 +1,6 @@
 ﻿namespace PictureViewPlus
 {
-    partial class Form1
+    partial class PictureViewPlus
     {
         /// <summary>
         /// Erforderliche Designervariable.
@@ -40,10 +40,10 @@
             this.rotateRightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mirrorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAllMetaDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picbox = new DDPanBox.DDPanBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.showAllMetaDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -71,7 +71,7 @@
             this.copyToClipboardToolStripMenuItem,
             this.imageToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 92);
             // 
             // öffnenInToolStripMenuItem
             // 
@@ -142,6 +142,13 @@
             this.mirrorToolStripMenuItem.Text = "Mirror";
             this.mirrorToolStripMenuItem.Click += new System.EventHandler(this.mirrorToolStripMenuItem_Click);
             // 
+            // showAllMetaDataToolStripMenuItem
+            // 
+            this.showAllMetaDataToolStripMenuItem.Name = "showAllMetaDataToolStripMenuItem";
+            this.showAllMetaDataToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.showAllMetaDataToolStripMenuItem.Text = "Show all meta data";
+            this.showAllMetaDataToolStripMenuItem.Click += new System.EventHandler(this.showAllMetaDataToolStripMenuItem_Click);
+            // 
             // picbox
             // 
             this.picbox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -171,14 +178,7 @@
             this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 0;
             // 
-            // showAllMetaDataToolStripMenuItem
-            // 
-            this.showAllMetaDataToolStripMenuItem.Name = "showAllMetaDataToolStripMenuItem";
-            this.showAllMetaDataToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.showAllMetaDataToolStripMenuItem.Text = "Show all meta data";
-            this.showAllMetaDataToolStripMenuItem.Click += new System.EventHandler(this.showAllMetaDataToolStripMenuItem_Click);
-            // 
-            // Form1
+            // PictureViewPlus
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -191,7 +191,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form1";
+            this.Name = "PictureViewPlus";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.TopMost = true;

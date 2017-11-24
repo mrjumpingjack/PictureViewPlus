@@ -19,10 +19,10 @@ namespace PictureViewPlus
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if(args.Length>0)
-            Application.Run(new Form1(args[0]));
+            Application.Run(new PictureViewPlus(args[0]));
             else
             {
-                Application.Run(new Form1(""));
+                Application.Run(new PictureViewPlus(""));
             }
         }
     }

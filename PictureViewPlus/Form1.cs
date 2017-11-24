@@ -19,7 +19,7 @@ using System.Drawing.Imaging;
 
 namespace PictureViewPlus
 {
-    public partial class Form1 : Form
+    public partial class PictureViewPlus : Form
     {
 
         Image img;
@@ -70,70 +70,79 @@ namespace PictureViewPlus
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show("ERROR while loading picture");
             }
         }
 
         private Bitmap convertCR2toJPG(string openFile)
         {
-            int nbRotated = 0;
-            const int BUF_SIZE = 512 * 1024;
-
-            byte[] buffer = new byte[BUF_SIZE];
-
-
-            FileStream fi = new FileStream(openFile, FileMode.Open, FileAccess.Read,
-                                               FileShare.Read, BUF_SIZE, FileOptions.None);
-            // Start address is at offset 0x62, file size at 0x7A, orientation at 0x6E
-            fi.Seek(0x62, SeekOrigin.Begin);
-            BinaryReader br = new BinaryReader(fi);
-            UInt32 jpgStartPosition = br.ReadUInt32();  // 62
-            br.ReadUInt32();  // 66
-            br.ReadUInt32();  // 6A
-            UInt32 orientation = br.ReadUInt32() & 0x000000FF; // 6E
-            br.ReadUInt32();  // 72
-            br.ReadUInt32();  // 76
-            Int32 fileSize = br.ReadInt32();  // 7A
-
-            fi.Seek(jpgStartPosition, SeekOrigin.Begin);
-
-
-            if (fi.ReadByte() != 0xFF || fi.ReadByte() != 0xD8)
+            try
             {
-                MessageBox.Show(String.Format("{0}\nEmbedded JPG not recognized. File skipped.", openFile),
-                    "Quick JPG from CR2", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                int nbRotated = 0;
+                const int BUF_SIZE = 512 * 1024;
+
+                byte[] buffer = new byte[BUF_SIZE];
+
+
+                FileStream fi = new FileStream(openFile, FileMode.Open, FileAccess.Read,
+                                                   FileShare.Read, BUF_SIZE, FileOptions.None);
+                // Start address is at offset 0x62, file size at 0x7A, orientation at 0x6E
+                fi.Seek(0x62, SeekOrigin.Begin);
+                BinaryReader br = new BinaryReader(fi);
+                UInt32 jpgStartPosition = br.ReadUInt32();  // 62
+                br.ReadUInt32();  // 66
+                br.ReadUInt32();  // 6A
+                UInt32 orientation = br.ReadUInt32() & 0x000000FF; // 6E
+                br.ReadUInt32();  // 72
+                br.ReadUInt32();  // 76
+                Int32 fileSize = br.ReadInt32();  // 7A
+
+                fi.Seek(jpgStartPosition, SeekOrigin.Begin);
+
+
+                if (fi.ReadByte() != 0xFF || fi.ReadByte() != 0xD8)
+                {
+                    MessageBox.Show(String.Format("{0}\nEmbedded JPG not recognized. File skipped.", openFile),
+                        "Quick JPG from CR2", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    string baseName = openFile.Substring(0, openFile.Length - 4);
+
+
+
+                    string jpgName = baseName + ".jpg";
+
+
+
+
+                    Bitmap bitmap = new Bitmap(new PartialStream(fi, jpgStartPosition, fileSize));
+
+                    if (orientation == 6)
+                        bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                    //else
+                    //    bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+                    EncoderParameters ep = new EncoderParameters(1);
+                    ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
+                    //bitmap.Save(jpgName, m_codecJpeg, ep);
+
+                    ++nbRotated;
+
+
+                    fi.Close();
+
+
+                    return bitmap;
+                }
+                return null;
             }
-            else
+            catch(Exception ex)
             {
-                string baseName = openFile.Substring(0, openFile.Length - 4);
-
-
-
-                string jpgName = baseName + ".jpg";
-
-
-
-
-                Bitmap bitmap = new Bitmap(new PartialStream(fi, jpgStartPosition, fileSize));
-
-                if (orientation == 6)
-                    bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                //else
-                //    bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-
-                EncoderParameters ep = new EncoderParameters(1);
-                ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
-                //bitmap.Save(jpgName, m_codecJpeg, ep);
-
-                ++nbRotated;
-
-
-                fi.Close();
-
-
-                return bitmap;
+                
+                MessageBox.Show("ERROR while convertig RAW to JPEG");
+                return null;
             }
-            return null;
         }
 
         static ImageCodecInfo m_codecJpeg = GetJpegCodec();
@@ -152,37 +161,44 @@ namespace PictureViewPlus
             return null;
         }
 
-        public Form1(string openFile)
+        public PictureViewPlus(string openFile)
         {
-            InitializeComponent();
-            
-           
-            picbox.BackColor = Color.Black;
-            pictureBox1.BackColor = Color.Black;
-
-            picbox.Visible = false;
-            pictureBox1.Visible = true;
-
-            this.pictureBox1.MouseWheel += pictureBox1_MouseWheel;
-
-
-            accfile = openFile;
-
-            if (openFile != "")
+            try
             {
-                load_pictureBox(openFile);
-                getmetadata(openFile);
+                InitializeComponent();
 
+
+                picbox.BackColor = Color.Black;
+                pictureBox1.BackColor = Color.Black;
+
+                picbox.Visible = false;
+                pictureBox1.Visible = true;
+
+                this.pictureBox1.MouseWheel += pictureBox1_MouseWheel;
+
+
+                accfile = openFile;
+
+                if (openFile != "")
+                {
+                    load_pictureBox(openFile);
+                    getmetadata(openFile);
+
+                }
+                else
+                {
+                    load_pictureBox("start.jpg");
+                    getmetadata("start.jpg");
+                }
+
+
+                this.Focus();
+                get_programm();
             }
-            else
+            catch(Exception ex)
             {
-                load_pictureBox("start.jpg");
-                getmetadata("start.jpg");
+                MessageBox.Show("ERROR while opening");
             }
-
-            
-            this.Focus();
-            get_programm();
 
         }
 
@@ -204,42 +220,48 @@ namespace PictureViewPlus
 
         private void getmetadata(string path)
         {
-            mdv = new MetadataView();
-
-            List<string> ImageInfo = new List<string>();
-
-            String[] infos = new string[] { "Date/Time", "Model", "Exposure Time", "F-Number", "Shutter Speed", "Focal Length", "File Name" };
-
-            label1.Text = "";
-            IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
-
-            mdv.Dirs = directories;
-
-            foreach (var directory in directories)
+            try
             {
-                foreach (var tag in directory.Tags)
-                {
-                    foreach (string info in infos)
-                    {
-                        if (tag.Name == info)
-                        {
-                            ImageInfo.Add(tag.Description);
+                mdv = new MetadataView();
 
+                List<string> ImageInfo = new List<string>();
+
+                String[] infos = new string[] { "Date/Time", "Model", "Exposure Time", "F-Number", "Shutter Speed", "Focal Length", "File Name" };
+
+                label1.Text = "";
+                IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
+
+                mdv.Dirs = directories;
+
+                foreach (var directory in directories)
+                {
+                    foreach (var tag in directory.Tags)
+                    {
+                        foreach (string info in infos)
+                        {
+                            if (tag.Name == info)
+                            {
+                                ImageInfo.Add(tag.Description);
+
+                            }
                         }
+                        // Console.WriteLine($"{directory.Name} - {tag.Name} = {tag.Description}");
                     }
-                   // Console.WriteLine($"{directory.Name} - {tag.Name} = {tag.Description}");
+                }
+
+                //if (ImageInfo.Count > 0)
+                //    ImageInfo.RemoveAt(ImageInfo.Count - 1);
+
+
+                foreach (string i in ImageInfo)
+                {
+                    label1.Text = label1.Text + i + "  |  ";
                 }
             }
-
-            //if (ImageInfo.Count > 0)
-            //    ImageInfo.RemoveAt(ImageInfo.Count - 1);
-
-
-            foreach (string i in ImageInfo)
+            catch(Exception ex)
             {
-                label1.Text = label1.Text + i + "  |  ";
+                MessageBox.Show("ERROR while getting meta data");
             }
-
         }
 
         public void next()
@@ -291,6 +313,7 @@ namespace PictureViewPlus
             catch (Exception ex)
             {
                 UseWaitCursor = false;
+                MessageBox.Show("ERROR while getting next picture");
             }
         }
 
@@ -345,36 +368,44 @@ namespace PictureViewPlus
             catch (Exception ex)
             {
                 UseWaitCursor = false;
+                MessageBox.Show("ERROR while getting prev picture");
             }
 
         }
 
         public void get_programm()
         {
-            for (int i = 97; i < 122; i++)
+            try
             {
-                try
+                for (int i = 97; i < 122; i++)
                 {
-                    string p = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.jpg\OpenWithList", Convert.ToString((char)i), null).ToString();
-                    string pp_ = @"HKEY_CLASSES_ROOT\Applications\" + p + @"\shell\open\command";
-                    string pp = Registry.GetValue(pp_, null, null).ToString();
-                    std_open_with_programm.Add(pp);
-                }
-                catch (Exception ex)
-                { }
-            }
-
-            for (int s = 0; s < std_open_with_programm.Count; s++)
-            {
-
-                std_open_with_programm[s] = std_open_with_programm[s].Substring(0, std_open_with_programm[s].LastIndexOf(".") + 4);
-                if (std_open_with_programm[s].StartsWith("\""))
-                {
-                    std_open_with_programm[s] = std_open_with_programm[s].Substring(1, std_open_with_programm[s].Length - 1);
+                    try
+                    {
+                        string p = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.jpg\OpenWithList", Convert.ToString((char)i), null).ToString();
+                        string pp_ = @"HKEY_CLASSES_ROOT\Applications\" + p + @"\shell\open\command";
+                        string pp = Registry.GetValue(pp_, null, null).ToString();
+                        std_open_with_programm.Add(pp);
+                    }
+                    catch (Exception ex)
+                    { }
                 }
 
+                for (int s = 0; s < std_open_with_programm.Count; s++)
+                {
+
+                    std_open_with_programm[s] = std_open_with_programm[s].Substring(0, std_open_with_programm[s].LastIndexOf(".") + 4);
+                    if (std_open_with_programm[s].StartsWith("\""))
+                    {
+                        std_open_with_programm[s] = std_open_with_programm[s].Substring(1, std_open_with_programm[s].Length - 1);
+                    }
+
+                }
+                std_open_with_programm.Sort();
             }
-            std_open_with_programm.Sort();
+            catch(Exception ex)
+            {
+                MessageBox.Show("ERROR while getting program options");
+            }
 
         }
 
@@ -463,8 +494,8 @@ namespace PictureViewPlus
                     {
                         showinghelp = true;
                         // pictureBox1.Load(openFile);
-                        picbox.Image = new Bitmap(typeof(Form1), "default.png");
-                        pictureBox1.Image = new Bitmap(typeof(Form1), "default.png");
+                        picbox.Image = new Bitmap(typeof(PictureViewPlus), "default.png");
+                        pictureBox1.Image = new Bitmap(typeof(PictureViewPlus), "default.png");
                     }
 
 
@@ -557,39 +588,51 @@ namespace PictureViewPlus
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Maximized)
+            try
             {
+                if (!PictureViewPlus.ActiveForm.Equals(null))
+                {
 
-                this.ControlBox = false;
-                this.MaximizeBox = false;
-                this.MinimizeBox = false;
-                this.TopMost = false;
+                    if (this.WindowState == FormWindowState.Maximized)
+                    {
+                       
+                        this.ControlBox = false;
+                        this.MaximizeBox = false;
+                        this.MinimizeBox = false;
+                        this.TopMost = false;
 
 
-                Form1.ActiveForm.Text = null;
+                        PictureViewPlus.ActiveForm.Text = null;
 
 
 
+                    }
+                    else
+                    {
+                        this.ControlBox = true;
+                        this.MaximizeBox = true;
+                        this.MinimizeBox = true;
+                        this.TopMost = false;
+
+                        PictureViewPlus.ActiveForm.Text = accfile;
+
+
+
+                        this.Height = (int)Math.Round(this.Width * aspectratio);
+
+
+
+                    }
+
+
+                    panel1.Size = new Size(this.Width, panel1.Height);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                this.ControlBox = true;
-                this.MaximizeBox = true;
-                this.MinimizeBox = true;
-                this.TopMost = false;
-
-                Form1.ActiveForm.Text = accfile;
-
-
-
-                this.Height = (int)Math.Round(this.Width * aspectratio);
-
-
-
+                //MessageBox.Show("ERROR while form resizing");
+                //MessageBox.Show(ex.Message);
             }
-
-
-            panel1.Size = new Size(this.Width, panel1.Height);
 
         }
 
@@ -771,6 +814,7 @@ namespace PictureViewPlus
             }
             catch(Exception ex)
             {
+                MessageBox.Show("ERROR while showing meta data");
                 MessageBox.Show(ex.Message);
             }
         }

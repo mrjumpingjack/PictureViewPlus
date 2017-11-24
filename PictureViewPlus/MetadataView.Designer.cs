@@ -76,7 +76,8 @@
             this.ClientSize = new System.Drawing.Size(494, 576);
             this.Controls.Add(this.dgv1);
             this.Controls.Add(this.listBox1);
-           // this.Name = "MetadataView";
+           
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MetadataView";
             this.Load += new System.EventHandler(this.MetadataView_Load);
             this.Resize += new System.EventHandler(this.MetadataView_Resize);

@@ -12,3 +12,19 @@ F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Re
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.csproj.GenerateResource.Cache
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.exe
 F:\Users\Christoph Bruns\Documents\GitHub\PictureViewPlus\PictureViewPlus\obj\Release\PictureViewPlus.pdb
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\start.jpg
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\PictureViewPlus.exe.config
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\PictureViewPlus.exe
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\PictureViewPlus.pdb
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\MetadataExtractor.dll
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\XmpCore.dll
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\MetadataExtractor.xml
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\bin\Release\XmpCore.xml
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.csprojResolveAssemblyReference.cache
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.PictureViewPlus.resources
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.MetadataView.resources
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.Properties.Resources.resources
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.csproj.GenerateResource.Cache
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.csproj.CoreCompileInputs.cache
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.exe
+H:\PictureViewPlus-master\PictureViewPlus-master\PictureViewPlus\obj\Release\PictureViewPlus.pdb

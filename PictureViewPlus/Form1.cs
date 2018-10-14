@@ -16,6 +16,7 @@ using System.Resources;
 using PictureViewPlus.Properties;
 using MetadataExtractor;
 using System.Drawing.Imaging;
+using System.Threading;
 
 namespace PictureViewPlus
 {
@@ -76,73 +77,80 @@ namespace PictureViewPlus
 
         private Bitmap convertCR2toJPG(string openFile)
         {
-            try
+            Bitmap bitmap = new Bitmap(0,0);
+
+            Thread thread = new Thread(() =>
             {
-                int nbRotated = 0;
-                const int BUF_SIZE = 512 * 1024;
-
-                byte[] buffer = new byte[BUF_SIZE];
-
-
-                FileStream fi = new FileStream(openFile, FileMode.Open, FileAccess.Read,
-                                                   FileShare.Read, BUF_SIZE, FileOptions.None);
-                // Start address is at offset 0x62, file size at 0x7A, orientation at 0x6E
-                fi.Seek(0x62, SeekOrigin.Begin);
-                BinaryReader br = new BinaryReader(fi);
-                UInt32 jpgStartPosition = br.ReadUInt32();  // 62
-                br.ReadUInt32();  // 66
-                br.ReadUInt32();  // 6A
-                UInt32 orientation = br.ReadUInt32() & 0x000000FF; // 6E
-                br.ReadUInt32();  // 72
-                br.ReadUInt32();  // 76
-                Int32 fileSize = br.ReadInt32();  // 7A
-
-                fi.Seek(jpgStartPosition, SeekOrigin.Begin);
-
-
-                if (fi.ReadByte() != 0xFF || fi.ReadByte() != 0xD8)
+                try
                 {
-                    MessageBox.Show(String.Format("{0}\nEmbedded JPG not recognized. File skipped.", openFile),
-                        "Quick JPG from CR2", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    int nbRotated = 0;
+                    const int BUF_SIZE = 512 * 1024;
+
+                    byte[] buffer = new byte[BUF_SIZE];
+
+
+                    FileStream fi = new FileStream(openFile, FileMode.Open, FileAccess.Read,
+                                                       FileShare.Read, BUF_SIZE, FileOptions.None);
+                    // Start address is at offset 0x62, file size at 0x7A, orientation at 0x6E
+                    fi.Seek(0x62, SeekOrigin.Begin);
+                    BinaryReader br = new BinaryReader(fi);
+                    UInt32 jpgStartPosition = br.ReadUInt32();  // 62
+                    br.ReadUInt32();  // 66
+                    br.ReadUInt32();  // 6A
+                    UInt32 orientation = br.ReadUInt32() & 0x000000FF; // 6E
+                    br.ReadUInt32();  // 72
+                    br.ReadUInt32();  // 76
+                    Int32 fileSize = br.ReadInt32();  // 7A
+
+                    fi.Seek(jpgStartPosition, SeekOrigin.Begin);
+
+
+                    if (fi.ReadByte() != 0xFF || fi.ReadByte() != 0xD8)
+                    {
+                        MessageBox.Show(String.Format("{0}\nEmbedded JPG not recognized. File skipped.", openFile),
+                            "Quick JPG from CR2", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        string baseName = openFile.Substring(0, openFile.Length - 4);
+
+
+
+                        string jpgName = baseName + ".jpg";
+
+
+
+
+                        bitmap = new Bitmap(new PartialStream(fi, jpgStartPosition, fileSize));
+
+                        if (orientation == 6)
+                            bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        //else
+                        //    bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+                        EncoderParameters ep = new EncoderParameters(1);
+                        ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
+                        //bitmap.Save(jpgName, m_codecJpeg, ep);
+
+                        ++nbRotated;
+
+
+                        fi.Close();
+                    }
+
                 }
-                else
+                catch (Exception ex)
                 {
-                    string baseName = openFile.Substring(0, openFile.Length - 4);
 
-
-
-                    string jpgName = baseName + ".jpg";
-
-
-
-
-                    Bitmap bitmap = new Bitmap(new PartialStream(fi, jpgStartPosition, fileSize));
-
-                    if (orientation == 6)
-                        bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                    //else
-                    //    bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-
-                    EncoderParameters ep = new EncoderParameters(1);
-                    ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
-                    //bitmap.Save(jpgName, m_codecJpeg, ep);
-
-                    ++nbRotated;
-
-
-                    fi.Close();
-
-
-                    return bitmap;
+                    MessageBox.Show("ERROR while convertig RAW to JPEG");
+                   
                 }
+            });
+
+            if (bitmap.Height != 0)
+                return bitmap;
+            else
                 return null;
-            }
-            catch(Exception ex)
-            {
-                
-                MessageBox.Show("ERROR while convertig RAW to JPEG");
-                return null;
-            }
         }
 
         static ImageCodecInfo m_codecJpeg = GetJpegCodec();
@@ -269,41 +277,31 @@ namespace PictureViewPlus
             try
             {
                 UseWaitCursor = true;
+
                 if (file_infos.LastIndexOf(accfile) + 1 < file_infos.Count())
                 {
                     accfile = file_infos[file_infos.IndexOf(accfile) + 1];
-                    img.Dispose();
 
-                    if (accfile.ToLower().EndsWith(".cr2"))
-                    {
-                        img = convertCR2toJPG(accfile);
-                    }
-                    else
-                    {
-                        img = Image.FromFile(accfile);
-                    }
-
-                    picbox.Image = img;
-                    pictureBox1.Image = img;
                 }
                 else
                 {
                     accfile = file_infos[0];
-                    img.Dispose();
-
-
-                    if (accfile.ToLower().EndsWith(".cr2"))
-                    {
-                        img = convertCR2toJPG(accfile);
-                    }
-                    else
-                    {
-                        img = Image.FromFile(accfile);
-                    }
-
-                    picbox.Image = img;
-                    pictureBox1.Image = img;
                 }
+
+                img.Dispose();
+
+                if (accfile.ToLower().EndsWith(".cr2"))
+                {
+                    img = convertCR2toJPG(accfile);
+                }
+                else
+                {
+                    img = Image.FromFile(accfile);
+                }
+
+                picbox.Image = img;
+                pictureBox1.Image = img;
+
 
                 getmetadata(accfile);
                 get_programm();
@@ -326,41 +324,27 @@ namespace PictureViewPlus
                 {
                     accfile = file_infos[file_infos.IndexOf(accfile) - 1];
                     img.Dispose();
-
-
-
-                    if (accfile.ToLower().EndsWith(".cr2"))
-                    {
-                        img = convertCR2toJPG(accfile);
-                    }
-                    else
-                    {
-                        img = Image.FromFile(accfile);
-                    }
-
-                    picbox.Image = img;
-                    pictureBox1.Image = img;
                 }
                 else
                 {
                     accfile = file_infos[file_infos.Count - 1];
-                    img.Dispose();
-
-
-
-                    if (accfile.ToLower().EndsWith(".cr2"))
-                    {
-                        img = convertCR2toJPG(accfile);
-                    }
-                    else
-                    {
-                        img = Image.FromFile(accfile);
-                    }
-
-                    picbox.Image = img;
-                    pictureBox1.Image = img;
-
                 }
+
+                img.Dispose();
+                
+                if (accfile.ToLower().EndsWith(".cr2"))
+                {
+                    img = convertCR2toJPG(accfile);
+                }
+                else
+                {
+                    img = Image.FromFile(accfile);
+                }
+
+                picbox.Image = img;
+                pictureBox1.Image = img;
+
+
                 getmetadata(accfile);
                 get_programm();
                 UseWaitCursor = false;
@@ -554,6 +538,9 @@ namespace PictureViewPlus
 
         }
 
+
+
+
         private void PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             try
@@ -732,7 +719,6 @@ namespace PictureViewPlus
             int y = this.PointToClient(new Point(e.X, e.Y)).Y;
 
             if (x >= pictureBox1.Location.X && x <= pictureBox1.Location.X + pictureBox1.Width && y >= pictureBox1.Location.Y && y <= pictureBox1.Location.Y + pictureBox1.Height)
-
             {
 
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -740,6 +726,23 @@ namespace PictureViewPlus
                 load_pictureBox(files[0]);
 
                 accfile = files[0];
+
+
+                DirectoryInfo dinfo = new DirectoryInfo(Path.GetDirectoryName(accfile));
+               var  fis = dinfo.GetFiles("*.jpg")
+                    .Concat(dinfo.GetFiles("*.tiff"))
+                    .Concat(dinfo.GetFiles("*.png"))
+                    //.Concat(dinfo.GetFiles("*.CR2"))
+                    .Concat(dinfo.GetFiles("*.cr2"))
+                    .Concat(dinfo.GetFiles("*.bmp"));
+
+
+                foreach (FileInfo fi in fis)
+                {
+                    file_infos.Add(fi.FullName);
+                }
+                file_infos.Sort();
+
                 this.Text =accfile;
                 getmetadata(accfile);
 

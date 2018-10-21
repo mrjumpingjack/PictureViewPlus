@@ -40,21 +40,14 @@ namespace PictureViewPlus
                 if (openFile.EndsWith("CR2"))
                 {
                     img = convertCR2toJPG(openFile);
-
                 }
                 else
                 {
-
                     img = (Bitmap)Image.FromFile(openFile);
-
                 }
-                // pictureBox1.Load(openFile);
                 picbox.Image = img;
                 pictureBox1.Image = img;
-
-
-
-
+                
                 if (img.Height < img.Width)
                 {
                     aspectratio = (float)img.Height / (float)img.Width;
@@ -77,7 +70,7 @@ namespace PictureViewPlus
 
         private Bitmap convertCR2toJPG(string openFile)
         {
-            Bitmap bitmap = new Bitmap(0,0);
+            Bitmap bitmap = new Bitmap(0, 0);
 
             Thread thread = new Thread(() =>
             {
@@ -85,10 +78,8 @@ namespace PictureViewPlus
                 {
                     int nbRotated = 0;
                     const int BUF_SIZE = 512 * 1024;
-
                     byte[] buffer = new byte[BUF_SIZE];
-
-
+                    
                     FileStream fi = new FileStream(openFile, FileMode.Open, FileAccess.Read,
                                                        FileShare.Read, BUF_SIZE, FileOptions.None);
                     // Start address is at offset 0x62, file size at 0x7A, orientation at 0x6E
@@ -114,36 +105,23 @@ namespace PictureViewPlus
                     {
                         string baseName = openFile.Substring(0, openFile.Length - 4);
 
-
-
                         string jpgName = baseName + ".jpg";
-
-
-
 
                         bitmap = new Bitmap(new PartialStream(fi, jpgStartPosition, fileSize));
 
                         if (orientation == 6)
                             bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                        //else
-                        //    bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
 
                         EncoderParameters ep = new EncoderParameters(1);
                         ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
-                        //bitmap.Save(jpgName, m_codecJpeg, ep);
-
                         ++nbRotated;
-
 
                         fi.Close();
                     }
-
                 }
                 catch (Exception ex)
                 {
-
                     MessageBox.Show("ERROR while convertig RAW to JPEG");
-                   
                 }
             });
 
@@ -537,10 +515,7 @@ namespace PictureViewPlus
             pictureBox1.MouseDown += PictureBox_MouseDown;
 
         }
-
-
-
-
+        
         private void PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             try
